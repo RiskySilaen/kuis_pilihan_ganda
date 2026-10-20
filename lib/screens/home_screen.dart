@@ -22,94 +22,139 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _startQuiz() {
-    // Validasi agar nama tidak boleh kosong
     if (_nameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Silakan masukkan nama Anda terlebih dahulu!'),
-          backgroundColor: Colors.red,
+        SnackBar(
+          content: Text('Tuliskan namamu dulu ya!', style: GoogleFonts.poppins()),
+          backgroundColor: Colors.redAccent,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
       );
       return;
     }
 
-    // Menyimpan nama pengguna ke Provider
     Provider.of<QuizProvider>(context, listen: false)
         .setUserName(_nameController.text.trim());
 
-    // Navigasi pindah ke halaman kuis
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => const QuizScreen()),
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => const QuizScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final quizProvider = Provider.of<QuizProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
+      // --- PERUBAHAN: Tombol dipindah ke AppBar agar mentok ke atas ---
       appBar: AppBar(
-        title: Text('Kuis IKLC', style: GoogleFonts.poppins()),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         actions: [
-          // Tombol Bonus: Ganti Tema Dark/Light Mode
-          IconButton(
-            icon: Icon(
-              quizProvider.isDarkMode ? Icons.light_mode : Icons.dark_mode,
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: IconButton(
+              icon: Icon(
+                quizProvider.isDarkMode ? Icons.wb_sunny : Icons.nightlight_round,
+                color: quizProvider.isDarkMode ? Colors.amber : Colors.indigo,
+                size: 28,
+              ),
+              onPressed: () {
+                quizProvider.toggleTheme();
+              },
             ),
-            onPressed: () {
-              quizProvider.toggleTheme();
-            },
           ),
         ],
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Menampilkan aset gambar logo
-              Image.asset(
-                'assets/images/logo.png',
-                height: 150,
-                errorBuilder: (context, error, stackTrace) {
-                  return const Icon(Icons.quiz, size: 100, color: Colors.blue);
-                },
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'Selamat Datang!',
-                style: GoogleFonts.poppins(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Silakan masukkan nama Anda untuk memulai kuis.',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey),
-              ),
-              const SizedBox(height: 32),
-              // Kolom input nama pengguna
-              TextField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: 'Nama Anda',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+      extendBodyBehindAppBar: true, // Agar layout tetap penuh ke layar
+      // ----------------------------------------------------------------
+
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Efek bayangan pada logo
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: isDark ? Colors.grey[850] : Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.blueAccent.withOpacity(0.2),
+                        blurRadius: 20,
+                        spreadRadius: 5,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
                   ),
-                  prefixIcon: const Icon(Icons.person),
+                  child: Image.asset(
+                    'assets/images/logo.png',
+                    height: 120,
+                    errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.quiz, size: 80, color: Colors.blueAccent),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 24),
-              // Memanggil reusable widget CustomButton
-              CustomButton(
-                text: 'Mulai Kuis',
-                onPressed: _startQuiz,
-              ),
-            ],
+                const SizedBox(height: 40),
+                Text(
+                  'Kuis IKLC',
+                  style: GoogleFonts.poppins(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? Colors.white : Colors.indigo[900],
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'Tantang dirimu dan lihat seberapa jauh\npengetahuan komputermu!',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.poppins(
+                    fontSize: 15,
+                    color: Colors.grey[600],
+                    height: 1.5,
+                  ),
+                ),
+                const SizedBox(height: 40),
+                // TextField yang lebih modern
+                TextField(
+                  controller: _nameController,
+                  style: GoogleFonts.poppins(fontSize: 16),
+                  decoration: InputDecoration(
+                    labelText: 'Siapa namamu?',
+                    labelStyle: GoogleFonts.poppins(color: Colors.grey[500]),
+                    prefixIcon: const Icon(Icons.person_outline, color: Colors.blueAccent),
+                    filled: true,
+                    fillColor: isDark ? Colors.grey[800] : Colors.blue[50],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(color: Colors.blueAccent, width: 2),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 30),
+                CustomButton(
+                  text: 'MULAI SEKARANG',
+                  icon: Icons.rocket_launch,
+                  onPressed: _startQuiz,
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
           ),
         ),
       ),

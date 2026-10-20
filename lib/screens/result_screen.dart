@@ -11,6 +11,21 @@ class ResultScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<QuizProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    // Menentukan warna piala berdasarkan skor
+    Color trophyColor;
+    String feedbackText;
+    if (provider.score == 100) {
+      trophyColor = Colors.amber;
+      feedbackText = "Sempurna! Kamu hebat!";
+    } else if (provider.score >= 50) {
+      trophyColor = Colors.blueAccent;
+      feedbackText = "Kerja bagus!";
+    } else {
+      trophyColor = Colors.grey;
+      feedbackText = "Jangan menyerah, coba lagi!";
+    }
 
     return Scaffold(
       body: Center(
@@ -19,36 +34,66 @@ class ResultScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.emoji_events, size: 100, color: Colors.amber),
-              const SizedBox(height: 20),
-              // Menampilkan nama pengguna yang dimasukkan di awal
+              // Efek Cahaya di belakang Piala
+              Container(
+                padding: const EdgeInsets.all(30),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: trophyColor.withOpacity(0.1),
+                ),
+                child: Icon(Icons.emoji_events, size: 120, color: trophyColor),
+              ),
+              const SizedBox(height: 30),
               Text(
-                'Kerja Bagus, ${provider.userName}!',
+                feedbackText,
                 style: GoogleFonts.poppins(
-                  fontSize: 24,
+                  fontSize: 18,
+                  color: isDark ? Colors.grey[400] : Colors.grey[600],
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                '${provider.userName}, Skor Kamu:',
+                style: GoogleFonts.poppins(
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 12),
-              Text(
-                'Skor Akhir Anda:',
-                style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey),
-              ),
-              const SizedBox(height: 8),
-              // Menampilkan nilai akhir
-              Text(
-                '${provider.score} / 100',
-                style: GoogleFonts.poppins(
-                  fontSize: 48,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.primary,
+              const SizedBox(height: 20),
+              // Kotak Skor
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: isDark
+                        ? [Colors.blue[900]!, Colors.purple[900]!]
+                        : [Colors.blueAccent, Colors.lightBlueAccent],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.blue.withOpacity(0.3),
+                      blurRadius: 15,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  '${provider.score} / 100',
+                  style: GoogleFonts.poppins(
+                    fontSize: 48,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
+                  ),
                 ),
               ),
-              const SizedBox(height: 40),
-              // Tombol untuk mengulang kuis dari awal
+              const SizedBox(height: 50),
               CustomButton(
-                text: 'Ulangi Kuis',
+                text: 'Main Lagi',
+                icon: Icons.refresh,
                 onPressed: () {
                   provider.resetQuiz();
                   Navigator.pushReplacement(

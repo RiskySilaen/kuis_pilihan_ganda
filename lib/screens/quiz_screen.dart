@@ -11,7 +11,6 @@ class QuizScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<QuizProvider>(
       builder: (context, provider, child) {
-        // Jika kuis sudah selesai, pindah ke ResultScreen
         if (provider.isQuizFinished) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             Navigator.pushReplacement(
@@ -19,76 +18,106 @@ class QuizScreen extends StatelessWidget {
               MaterialPageRoute(builder: (context) => const ResultScreen()),
             );
           });
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
+          return const Scaffold(body: Center(child: CircularProgressIndicator()));
         }
 
-        // Mengambil pertanyaan saat ini
         final currentQuestion = provider.questions[provider.currentIndex];
+        final progress = (provider.currentIndex + 1) / provider.questions.length;
+        final isDark = Theme.of(context).brightness == Brightness.dark;
 
         return Scaffold(
           appBar: AppBar(
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            centerTitle: true,
             title: Text(
-              'Soal ${provider.currentIndex + 1} dari ${provider.questions.length}',
-              style: GoogleFonts.poppins(),
+              'Soal ${provider.currentIndex + 1} / ${provider.questions.length}',
+              style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
             ),
           ),
           body: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(24.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Progress Bar Dinamis
-                LinearProgressIndicator(
-                  value: (provider.currentIndex + 1) / provider.questions.length,
-                  minHeight: 10,
+                // Progress Bar dengan sudut bulat
+                ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                ),
-                const SizedBox(height: 30),
-                // Kotak Pertanyaan
-                Card(
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
+                  child: LinearProgressIndicator(
+                    value: progress,
+                    minHeight: 10,
+                    backgroundColor: isDark ? Colors.grey[800] : Colors.blue[100],
+                    color: Colors.blueAccent,
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Text(
-                      currentQuestion.questionText,
-                      style: GoogleFonts.poppins(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
+                ),
+                const SizedBox(height: 40),
+                // Card Pertanyaan
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                  decoration: BoxDecoration(
+                    color: isDark ? Colors.grey[850] : Colors.white,
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 20,
+                        offset: const Offset(0, 10),
                       ),
-                      textAlign: TextAlign.center,
+                    ],
+                  ),
+                  child: Text(
+                    currentQuestion.questionText,
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      height: 1.5,
                     ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
-                const SizedBox(height: 30),
-                // Daftar Pilihan Jawaban
+                const SizedBox(height: 40),
+                // Pilihan Jawaban
                 Expanded(
                   child: ListView.builder(
                     itemCount: currentQuestion.options.length,
                     itemBuilder: (context, index) {
                       final option = currentQuestion.options[index];
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 16),
-                        child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 16.0),
+                        child: InkWell(
+                          onTap: () => provider.answerQuestion(option),
+                          borderRadius: BorderRadius.circular(16),
+                          child: Container(
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: isDark ? Colors.grey[800] : Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: isDark ? Colors.grey[700]! : Colors.blue[100]!,
+                                width: 2,
+                              ),
                             ),
-                          ),
-                          onPressed: () {
-                            // Kirim jawaban pengguna ke Provider
-                            provider.answerQuestion(option);
-                          },
-                          child: Text(
-                            option,
-                            style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  backgroundColor: Colors.blueAccent.withOpacity(0.1),
+                                  foregroundColor: Colors.blueAccent,
+                                  child: Text(
+                                    String.fromCharCode(65 + index), // A, B, C, D
+                                    style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Text(
+                                    option,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
