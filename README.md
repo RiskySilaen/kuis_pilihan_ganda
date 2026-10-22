@@ -63,5 +63,7 @@ Aplikasi ini adalah kuis interaktif berbasis Flutter yang dikembangkan untuk mem
   - *(Tidak ada mockup eksternal, desain UI langsung diimplementasikan ke dalam kode Flutter dengan kustomisasi CSS-like).*
 
 - **Kredit Aset**: 
-  - Logo Aplikasi (Assets): [Quiz icons created by Magnific - Flaticon](https://www.flaticon.com/free-icons/quiz)
+  - Logo Aplikasi (Assets): Flaticon
+    <img width="512" height="512" alt="quiz" src="https://github.com/user-attachments/assets/f59f60c8-3b0e-4458-8997-bb9c5a0056b9" />
+
   - Font: [Google Fonts - Poppins](https://fonts.google.com/specimen/Poppins)
