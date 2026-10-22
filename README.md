@@ -64,6 +64,8 @@ Aplikasi ini adalah kuis interaktif berbasis Flutter yang dikembangkan untuk mem
 
 - **Kredit Aset**: 
   - Logo Aplikasi (Assets): Flaticon
+ 
+    
     <img width="512" height="512" alt="quiz" src="https://github.com/user-attachments/assets/f59f60c8-3b0e-4458-8997-bb9c5a0056b9" />
 
   - Font: [Google Fonts - Poppins](https://fonts.google.com/specimen/Poppins)
