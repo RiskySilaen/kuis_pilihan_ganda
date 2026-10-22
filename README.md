@@ -57,8 +57,7 @@ Aplikasi ini adalah kuis interaktif berbasis Flutter yang dikembangkan untuk mem
 
 ## 🔗 Tautan Penting & Kredit
 
-- **Video Presentasi Demo & Kodingan**: 
-  [👉 Klik di sini untuk menonton Video Presentasi (Google Drive) 👈](MASUKKAN_LINK_GOOGLE_DRIVE_KAMU_DI_SINI)
+- **Video Presentasi Demo & Kodingan**: https://drive.google.com/drive/folders/1qvjRApEAgj4auIj096JO9DuxeIgRpcZo?usp=sharing
 
 - **Link Mockup / Prototype**: 
   - *(Tidak ada mockup eksternal, desain UI langsung diimplementasikan ke dalam kode Flutter dengan kustomisasi CSS-like).*
