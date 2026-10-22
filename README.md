@@ -38,7 +38,7 @@ Aplikasi ini adalah kuis interaktif berbasis Flutter yang dikembangkan untuk mem
 
 - **Halaman Beranda (Home Screen)**
   
-     Light Mode            Dark Mode
+     Light Mode                                                                                  Dark Mode
 <img width="390" height="657" alt="image" src="https://github.com/user-attachments/assets/8de67150-8139-4d38-9dce-7f25e5b92722" />
 <img width="360" height="656" alt="image" src="https://github.com/user-attachments/assets/cbb51066-d9bf-4c19-a22a-7e7a7f32a628" />
 
