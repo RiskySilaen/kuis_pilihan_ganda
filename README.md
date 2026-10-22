@@ -37,17 +37,21 @@ Aplikasi ini adalah kuis interaktif berbasis Flutter yang dikembangkan untuk mem
 *Catatan: Screenshot aplikasi dapat dilihat pada folder `docs/screenshots/`*
 
 - **Halaman Beranda (Home Screen)**
-  
-     Light Mode                                                                                  
-<img width="390" height="657" alt="image" src="https://github.com/user-attachments/assets/8de67150-8139-4d38-9dce-7f25e5b92722" /> Dark Mode
+                                                                                
+<img width="390" height="657" alt="image" src="https://github.com/user-attachments/assets/8de67150-8139-4d38-9dce-7f25e5b92722" /> 
 <img width="360" height="656" alt="image" src="https://github.com/user-attachments/assets/cbb51066-d9bf-4c19-a22a-7e7a7f32a628" />
 
 
 - **Halaman Kuis (Quiz Screen)**
-  ![Quiz Screen](docs/screenshots/quiz_screen.png)
+<img width="327" height="638" alt="image" src="https://github.com/user-attachments/assets/6cd688e6-deef-4bc0-89ef-e36128e97238" />
+<img width="333" height="647" alt="image" src="https://github.com/user-attachments/assets/f15423a7-70b5-417f-8ea5-c7ec73a1fb3f" />
+<img width="313" height="640" alt="image" src="https://github.com/user-attachments/assets/b7740e2c-138b-426a-b764-90d735a92616" />
+
 
 - **Halaman Hasil (Result Screen)**
-  ![Result Screen](docs/screenshots/result_screen.png)
+<img width="318" height="636" alt="image" src="https://github.com/user-attachments/assets/b7c16cdf-dd3f-4892-96dd-f9553f1f7786" />
+<img width="331" height="651" alt="image" src="https://github.com/user-attachments/assets/9b20c7ec-afd4-440e-b87e-b89348a8ae6a" />
+
 
 ---
 
