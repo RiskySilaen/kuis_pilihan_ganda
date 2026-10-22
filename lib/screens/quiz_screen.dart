@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
+import '../widgets/custom_button.dart';
 import 'result_screen.dart';
 
 class QuizScreen extends StatelessWidget {
@@ -40,7 +41,7 @@ class QuizScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Progress Bar dengan sudut bulat
+                // Progress Bar
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: LinearProgressIndicator(
@@ -50,7 +51,7 @@ class QuizScreen extends StatelessWidget {
                     color: Colors.blueAccent,
                   ),
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 30),
                 // Card Pertanyaan
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
@@ -75,38 +76,55 @@ class QuizScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 30),
                 // Pilihan Jawaban
                 Expanded(
                   child: ListView.builder(
                     itemCount: currentQuestion.options.length,
                     itemBuilder: (context, index) {
                       final option = currentQuestion.options[index];
+
+                      // Logika Penentuan Warna (Benar = Hijau, Salah = Merah)
+                      bool isCorrectAnswer = option == currentQuestion.correctAnswer;
+                      bool isSelected = option == provider.lastSelectedAnswer;
+
+                      Color borderColor = isDark ? Colors.grey[700]! : Colors.blue[100]!;
+                      Color bgColor = isDark ? Colors.grey[800]! : Colors.white;
+                      IconData iconData = Icons.circle_outlined;
+                      Color iconColor = isDark ? Colors.grey[400]! : Colors.blueAccent;
+
+                      if (provider.hasAnsweredCurrent) {
+                        if (isCorrectAnswer) {
+                          borderColor = Colors.green;
+                          bgColor = Colors.green.withOpacity(0.15);
+                          iconData = Icons.check_circle;
+                          iconColor = Colors.green;
+                        } else if (isSelected) {
+                          borderColor = Colors.red;
+                          bgColor = Colors.red.withOpacity(0.15);
+                          iconData = Icons.cancel;
+                          iconColor = Colors.red;
+                        }
+                      }
+
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 16.0),
                         child: InkWell(
-                          onTap: () => provider.answerQuestion(option),
+                          onTap: provider.hasAnsweredCurrent
+                              ? null // Matikan tombol jika sudah dijawab
+                              : () => provider.answerQuestion(option),
                           borderRadius: BorderRadius.circular(16),
-                          child: Container(
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 300),
                             padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
-                              color: isDark ? Colors.grey[800] : Colors.white,
+                              color: bgColor,
                               borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                color: isDark ? Colors.grey[700]! : Colors.blue[100]!,
-                                width: 2,
-                              ),
+                              border: Border.all(color: borderColor, width: 2),
                             ),
                             child: Row(
                               children: [
-                                CircleAvatar(
-                                  backgroundColor: Colors.blueAccent.withOpacity(0.1),
-                                  foregroundColor: Colors.blueAccent,
-                                  child: Text(
-                                    String.fromCharCode(65 + index), // A, B, C, D
-                                    style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
-                                  ),
-                                ),
+                                Icon(iconData, color: iconColor),
                                 const SizedBox(width: 16),
                                 Expanded(
                                   child: Text(
@@ -125,6 +143,57 @@ class QuizScreen extends StatelessWidget {
                     },
                   ),
                 ),
+
+                // Munculkan Box Penjelasan & Tombol Lanjut JIKA sudah dijawab
+                if (provider.hasAnsweredCurrent) ...[
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: provider.isLastAnswerCorrect
+                          ? Colors.green.withOpacity(0.1)
+                          : Colors.red.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: provider.isLastAnswerCorrect ? Colors.green : Colors.red,
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              provider.isLastAnswerCorrect ? Icons.check_circle : Icons.cancel,
+                              color: provider.isLastAnswerCorrect ? Colors.green : Colors.red,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              provider.isLastAnswerCorrect ? 'Jawaban Benar!' : 'Jawaban Salah!',
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: provider.isLastAnswerCorrect ? Colors.green : Colors.red,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          currentQuestion.explanation,
+                          style: GoogleFonts.poppins(fontSize: 14),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  CustomButton(
+                    text: 'Lanjut ke Soal Berikutnya',
+                    icon: Icons.arrow_forward,
+                    onPressed: () {
+                      provider.nextQuestion();
+                    },
+                  ),
+                ],
               ],
             ),
           ),
