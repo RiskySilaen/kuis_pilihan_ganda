@@ -37,7 +37,8 @@ Aplikasi ini adalah kuis interaktif berbasis Flutter yang dikembangkan untuk mem
 *Catatan: Screenshot aplikasi dapat dilihat pada folder `docs/screenshots/`*
 
 - **Halaman Beranda (Home Screen)**
-  ![Home Screen](docs/screenshots/home_screen.png)
+Light Mode
+<img width="390" height="657" alt="image" src="https://github.com/user-attachments/assets/8de67150-8139-4d38-9dce-7f25e5b92722" />
 
 - **Halaman Kuis (Quiz Screen)**
   ![Quiz Screen](docs/screenshots/quiz_screen.png)
