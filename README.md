@@ -7,7 +7,7 @@ Aplikasi ini adalah kuis interaktif berbasis Flutter yang dikembangkan untuk mem
 ## 👨‍💻 Identitas Mahasiswa
 - **Nama** : Risky Jonalson Silaen
 - **NIM**  : 241401010
-- **Lab**  : Pemrograman Mobile (PM 1 & PM 3)
+- **Lab**  : Pemrograman Mobile 1 
 
 ---
 
